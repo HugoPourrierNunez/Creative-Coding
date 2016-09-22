@@ -18,6 +18,8 @@ class Shape {
   float actualSize=1;
   float speedChangeSize = .05;
 
+  int state = 0;
+  
   Shape() {
     InitGeometry();
   }
@@ -34,7 +36,7 @@ class Shape {
      speedChangeSize= aSpeed;
   }
   
-  void drawGeometry()
+  void update()
   {
       // We will keep how far the vertices are from their target
     float totalDistance = 0;
@@ -69,14 +71,21 @@ class Shape {
       translate(width/2, height/2);
       strokeWeight(4);
       // Draw a polygon that makes up all the vertices
-      beginShape();
-      noFill();
-      stroke(random(0,256), random(0, 256), random(0, 256));
+      
       actualShape = morph;
+      
+  }
+  
+  public void display()
+  {
+     beginShape();
+      noFill();
+      //stroke(random(0,256), random(0, 256), random(0, 256));
+      stroke(255);
       for (PVector v : morph) {
         vertex(v.x*actualSize, v.y*actualSize);
       }
-      endShape(CLOSE);
+      endShape(CLOSE); 
   }
   
   
@@ -88,21 +97,6 @@ class Shape {
   public ArrayList<PVector> getActualShape()
   {
      return actualShape; 
-  }
-  
-  
-  PVector getRandomPointOnTheShape(){
-    PVector pos = new PVector(0, 0);
-    int firstPoint = (int)random(allShape.get(state).size()-1);
-    if(allShape.get(state).get(firstPoint) != allShape.get(state).get(firstPoint+1)){
-        float m = ((allShape.get(state).get(firstPoint+1).y-allShape.get(state).get(firstPoint).y)/(allShape.get(state).get(firstPoint+1).y-allShape.get(state).get(firstPoint).y));
-        float p = allShape.get(state).get(firstPoint).y - m*allShape.get(state).get(firstPoint).x;
-        
-        float x = random(allShape.get(state).get(firstPoint).x, allShape.get(state).get(firstPoint+1).x);
-        println(state, firstPoint, m, x, p);
-        pos.add(x, m*x + p);        
-    }
-    return pos;
   }
   
   void InitGeometry()
@@ -224,17 +218,20 @@ class Shape {
     }
     
     allShape.add(octogone);
+    
+    actualShape=circle;
   }
   
   public PVector getPointOnShape()
   {
-      int i = (int) random(0,actualShape.size());
+      int i = (int) random(0,actualShape.size()-2);
       int j=i+1;
-      if(j==actualShape.size())
-        j=0;
-      while(actualShape.get(i).equals(actualShape.get(j)))
+      while(actualShape.get(i).x==actualShape.get(j).x && actualShape.get(i).y==actualShape.get(j).y)
       {
+        delay(100);
         j++;
+        if(j==actualShape.size())
+          j=0;
       }
       
       PVector p1,p2;

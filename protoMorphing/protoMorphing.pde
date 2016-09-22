@@ -2,32 +2,31 @@
 ParticleSystem ps;
 PImage sprite;  
 
-int state = 1;
 Shape shape ;
 
 void setup() {
+  
+  shape = new Shape();
+  
   frameRate(30);
   sprite = loadImage("sprite.png");
-  ps = new ParticleSystem(1);
-  
-  size(1280, 720);
-
-   shape = new Shape();
+  ps = new ParticleSystem(3000,width/2, height/2);
+  size(640, 360, P3D);
 }
 
 void draw() {
   background(0);  
   
-  noStroke();
+  shape.update();
+  //shape.display();
   
   ps.update();
   ps.display();
   
-  ps.setEmitter(width/2, height/2);
-  shape.drawGeometry();
   if(shape.isShapeComplete())
   {
     shape.changeShape((int)random(0,7));
-    shape.changeSize(random(1,3), .02);
+  
+    //shape.changeSize(2, .02);
   }
 }

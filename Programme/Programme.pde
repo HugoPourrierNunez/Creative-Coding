@@ -5,7 +5,7 @@ int w=800;
 int h=800;
 
 //Text field values 
-String myText="D:/PC/Téléchargements/Test2.wav";
+String myText="D:/PC/Téléchargements/Test3.wav";
 int heightTextField = 50;
 int widthTextField = 350;
 int spaceTextField = 220;
@@ -34,9 +34,12 @@ boolean resultFound = false;
 boolean isPlaying = false;
 boolean isEnding = false;
 
+Analyser analyser;
+
 void setup()
 {
     size(800,800);
+    analyser = new Analyser();
 }
 
 void draw()
@@ -66,6 +69,8 @@ void draw()
       inStartMenu = true;
       isPlaying = false;
     }
+    
+    
   }
   else if (inStartMenu)
   {
@@ -223,16 +228,10 @@ void mousePressed() {
     }
     else if(myText.length()>0)
     {
-      println("test2");
-      while(moodTab.length>0)
-      {
-        shorten(moodTab);
-      }
-      while(durationTab.length>0)
-      {
-        shorten(durationTab);
-      }
+      moodTab= new String[0];
+      durationTab= new int[0];
       isbuttonClicked = 1;
+      isEnding= false;
     }
   }
   if (button2Over) {
@@ -245,7 +244,7 @@ void mousePressed() {
 void send()
 {
     println("ANALYSE");
-    analyseBeyondVerbal(myText, "72591e54-5852-4a65-93c6-d8227b77d570");
+    analyser.analyseBeyondVerbal(myText, "72591e54-5852-4a65-93c6-d8227b77d570");
     
     println("RESULTS");
     for(int i =0; i<moodTab.length && i<durationTab.length;i++)
@@ -258,60 +257,7 @@ void send()
     
 }
 
-void analyseBeyondVerbal(String filePath, String apiKey)
-{
-    String startUrl = "https://apiv3.beyondverbal.com/v3/recording/";
-  
-    PostRequest authPost = new PostRequest("https://token.beyondverbal.com/token");
-    authPost.addData("apiKey", apiKey);
-    authPost.addData("grant_type", "client_credentials");
-    authPost.addHeader("Content-Type", "x-www-form-urlencoded");
-    authPost.send();
-    
-    JSONObject response = parseJSONObject(authPost.getContent());
-    String token = response.getString("access_token");
-    //println("access_token: " + token);
-    
-    PostRequest startPost = new PostRequest(startUrl+"start");
-    startPost.setEntity("{ dataFormat: { type:\"WAV\" } } ");
-    startPost.addHeader("content-type", "application/json");
-    startPost.addHeader("Authorization", "Bearer " + token);
-    startPost.send();
-    
-    String recordingId = parseJSONObject(startPost.getContent()).getString("recordingId");
-    
-    //println("recordingId: "+recordingId);
-    
-    PostRequest upStreamPost = new PostRequest(startUrl+recordingId);
-    upStreamPost.addHeader("Authorization", "Bearer " + token);
-    upStreamPost.setByteFileUpload(filePath);
-    upStreamPost.send();
-    
-    JSONObject json = parseJSONObject(upStreamPost.getContent());
-    JSONArray jsonArray = json.getJSONObject("result").getJSONArray("analysisSegments");
-    
-    int lastOffset = 0;
-    int lastDuration = 0;
-    int offset,duration;
-    String mood;
-    
-    for(int i=0;i<jsonArray.size();i++) {
-      JSONObject j = jsonArray.getJSONObject(i);
-      offset = j.getInt("offset");
-      if(offset>lastOffset+lastDuration)
-      {
-         moodTab = splice( moodTab, "UNDEFINED", moodTab.length);
-         durationTab  = splice( durationTab, offset-(lastOffset+lastDuration), durationTab.length);
-      }
-      duration = j.getInt("duration");
-      mood = j.getJSONObject("analysis").getJSONObject("Mood").getJSONObject("Group11").getJSONObject("Primary").getString("Phrase");
-      
-      moodTab = splice( moodTab, mood, moodTab.length);
-      durationTab  = splice( durationTab, duration, durationTab.length);
-      lastDuration = duration;
-      lastOffset = offset;
-    }
-}
+
 
 void setColorFromMood(String mood)
 {
@@ -352,6 +298,5 @@ void setColorFromMood(String mood)
    b/=moods.length;*/
    
    background(r,g,b);
-   
    
 }

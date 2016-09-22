@@ -1,24 +1,28 @@
+// An individual Particle
+
 class Particle {
 
+  // Velocity
   PVector velocity;
-  float lifespan = 255;
-  boolean fading;
+  // Lifespane is tied to alpha
+  float lifespan;
+
+  // The particle PShape
   PShape part;
+  // The particle size
   float partSize;
-  Shape shape;
+  
+  PVector target;
+  
+  PVector pos = new PVector(width/2, height/2);
+  
+  boolean touchTarget = false;
+  
 
-  PVector gravity = new PVector(0, 1);
-  int[] tint;
-  private PVector targetPos;
-  private float x, y;
-
-  Particle() {
-    shape = new Shape();
-    targetPos = new PVector(0, 0);
-    gravity = new PVector(random(-0.1, 0.1), random(-0.1, 0.1));
-    partSize = random(10, 60);
+  Particle(int x,int y) {    
+    partSize = 10;
+    // The particle is a textured quad
     part = createShape();
-    tint = new int[] {255, 0, 0};//(int)random(lifespan), (int)random(lifespan), (int)random(lifespan)};
     part.beginShape(QUAD);
     part.noStroke();
     part.texture(sprite);
@@ -28,62 +32,67 @@ class Particle {
     part.vertex(+partSize/2, +partSize/2, sprite.width, sprite.height);
     part.vertex(-partSize/2, +partSize/2, 0, sprite.height);
     part.endShape();
-
-    lifespan = random(255);
+    
+    // Set the particle starting location
+    rebirth(x, y);
   }
 
   PShape getShape() {
     return part;
   }
 
-  void rebirth(float x, float y) {
-    lifespan = 255;   
-    fading = false;
-    tint = new int[] {color(random(lifespan), 0, random(lifespan))};
-    float a = random(TWO_PI);
+  void rebirth(float px, float py) {
+    pos = new PVector(width/2, height/2);
+    
     float speed = random(0.5, 4);
-    velocity = new PVector(cos(a), sin(a));
-    velocity.mult(speed);
+    // A velocity with random angle and magnitude
+    
+    target = shape.getPointOnShape();
+    target.x+=width/2;
+    target.y+=height/2;
+    
+    velocity = new PVector(target.x-px, target.y-py);
+    velocity.normalize();
+    velocity.mult(speed*2);
+    // Set lifespan
+    lifespan = 255;
+    // Set location using translate
     part.resetMatrix();
-    part.setTint(color(0, 0, 255, lifespan));
-    part.translate(x, y);
-    this.x = x; 
-    this.y = y;
+    touchTarget=false;
   }
 
+  // Is it off the screen, or its lifespan is over?
   boolean isDead() {
-    if (lifespan < 0) {
+    if (lifespan <= 0) {
+      //println("dead");
       return true;
-    } else {
+    } 
+    else {
       return false;
     }
   }
 
-  public void update() {
-    if(abs(distanceToTarget()) <= 0.1){
-      fading = true;
-    };
-    if(fading){
-      lifespan -= 40;
-    }  
+  void update() {
     
-    velocity.add(gravity);
+    if(abs(pos.x-target.x)<5 && abs(pos.y-target.y)<5 )
+    {
+      touchTarget=true;
+    }
+    if(touchTarget)
+    {
+       lifespan=0;
+    }
     
-    part.setTint(color(100, 0, 255, lifespan));
+    lifespan-=2;
+    
+    part.setTint(color(255, lifespan));
+    // Move the particle according to its velocity
     part.translate(velocity.x, velocity.y);
-    x += velocity.x;
-    y += velocity.y;
-    println(x, y);
-  }
-  
-  public void setTargetPosition(PVector t){
-    targetPos.x = t.x;
-    targetPos.y = t.y;
+    pos.x+=velocity.x;
+    pos.y+=velocity.y;
   }
   
   float distanceToTarget(){
-    gravity.x = (targetPos.x-x)/1000;
-    gravity.y = (targetPos.y-y)/1000;
-    return (targetPos.y-y)/(targetPos.x-x);
+    return sqrt(pow(target.y-pos.y,2)/pow(target.x-pos.x,2));
   }
 }

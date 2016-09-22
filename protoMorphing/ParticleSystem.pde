@@ -1,19 +1,27 @@
+// The Particle System
 
 class ParticleSystem {
+  // It's just an ArrayList of particle objects
   ArrayList<Particle> particles;
-  Shape shape = new Shape();
 
+  // The PShape to group all the particle PShapes
   PShape particleShape;
+  
+  int emitX,emitY;
 
-  ParticleSystem(int n) {
+  ParticleSystem(int n, int x, int y) {
+    emitX=x;
+    emitY=y;
+    
     particles = new ArrayList<Particle>();
-    particleShape = createShape(PShape.GROUP);
+    // The PShape is a group
+    particleShape = createShape(GROUP);
 
+    // Make all the Particles
     for (int i = 0; i < n; i++) {
-      Particle p = new Particle();   
-      p.setTargetPosition(shape.getRandomPointOnTheShape());
-      p.rebirth(width/2, height/2);
+      Particle p = new Particle(x,y);
       particles.add(p);
+      // Each particle's PShape gets added to the System PShape
       particleShape.addChild(p.getShape());
     }
   }
@@ -21,14 +29,8 @@ class ParticleSystem {
   void update() {
     for (Particle p : particles) {
       p.update();
-    }
-  }
-
-  void setEmitter(float x, float y) {
-    for (Particle p : particles) {
       if (p.isDead()) {
-        p.setTargetPosition(shape.getRandomPointOnTheShape());
-        p.rebirth(x, y); 
+        p.rebirth(emitX, emitY);
       }
     }
   }
