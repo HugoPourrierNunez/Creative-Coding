@@ -1,24 +1,28 @@
 class Shape{
   
-  int[] pos = new int[] {0, height/2};
+  PVector pos;
   
-  int[] getRandomPointOnTheShape(){
+  Shape() {
+    pos = new PVector(0, 0);
+  }
+  
+  PVector getRandomPointOnTheShape(){
       switch ((int)random(4)){
          case 0:
-           pos[0] = width/2 + 70;
-           pos[1] = (int)random(height/2-70, height/2+70);
+           pos.x = width/2 + 70;
+           pos.y = (int)random(height/2-70, height/2+70);
            break;
          case 1:
-           pos[0] = width/2 - 70;
-           pos[1] = (int)random(height/2-70, height/2+70);
+           pos.x = width/2 - 70;
+           pos.y = (int)random(height/2-70, height/2+70);
            break;
          case 2:
-           pos[1] = height/2 + 70;
-           pos[0] = (int)random(width/2-70, width/2+70);
+           pos.y = height/2 + 70;
+           pos.x = (int)random(width/2-70, width/2+70);
            break;
          case 3:
-           pos[1] = height/2 - 70;
-           pos[0] = (int)random(width/2-70, width/2+70);
+           pos.y = height/2 - 70;
+           pos.x = (int)random(width/2-70, width/2+70);
            break;
       }
     return pos;

@@ -18,12 +18,12 @@ void setup() {
 void draw() {
   background(0);  
   
-  noStroke();
-  
   ps.update();
   ps.display();
   
   ps.setEmitter(width/2, height/2);
+  
+  noStroke();
   shape.drawGeometry();
   if(shape.isShapeComplete())
   {

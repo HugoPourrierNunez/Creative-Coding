@@ -9,7 +9,7 @@ int sphereBundleSize = 1;
 void setup() {
   frameRate(30);
   sprite = loadImage("sprite.png");
-  ps = new ParticleSystem(1000);  
+  ps = new ParticleSystem(500);  
   
   sphereCounter = 0;
   size(640, 360, P3D);

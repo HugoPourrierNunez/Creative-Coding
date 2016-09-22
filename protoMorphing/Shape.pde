@@ -90,6 +90,21 @@ class Shape {
      return actualShape; 
   }
   
+  
+  PVector getRandomPointOnTheShape(){
+    PVector pos = new PVector(0, 0);
+    int firstPoint = (int)random(allShape.get(state).size()-1);
+    if(allShape.get(state).get(firstPoint) != allShape.get(state).get(firstPoint+1)){
+        float m = ((allShape.get(state).get(firstPoint+1).y-allShape.get(state).get(firstPoint).y)/(allShape.get(state).get(firstPoint+1).y-allShape.get(state).get(firstPoint).y));
+        float p = allShape.get(state).get(firstPoint).y - m*allShape.get(state).get(firstPoint).x;
+        
+        float x = random(allShape.get(state).get(firstPoint).x, allShape.get(state).get(firstPoint+1).x);
+        println(state, firstPoint, m, x, p);
+        pos.add(x, m*x + p);        
+    }
+    return pos;
+  }
+  
   void InitGeometry()
   {
     // Circle

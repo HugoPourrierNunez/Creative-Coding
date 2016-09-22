@@ -65,7 +65,6 @@ class Particle {
     };
     if(fading){
       lifespan -= 40;
-      println(lifespan);
     }  
     
     velocity.add(gravity);
@@ -74,6 +73,7 @@ class Particle {
     part.translate(velocity.x, velocity.y);
     x += velocity.x;
     y += velocity.y;
+    println(x, y);
   }
   
   public void setTargetPosition(PVector t){
@@ -82,8 +82,8 @@ class Particle {
   }
   
   float distanceToTarget(){
-    gravity.x = (targetPos.x-x)/100;
-    gravity.y = (targetPos.y-y)/100;
+    gravity.x = (targetPos.x-x)/1000;
+    gravity.y = (targetPos.y-y)/1000;
     return (targetPos.y-y)/(targetPos.x-x);
   }
 }
