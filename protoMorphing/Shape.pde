@@ -7,17 +7,21 @@ class Shape {
   ArrayList<PVector> losange = new ArrayList<PVector>();
   ArrayList<PVector> octogone = new ArrayList<PVector>();
   ArrayList<PVector> fleur = new ArrayList<PVector>();
-  ArrayList<PVector> morph = new ArrayList<PVector>();
   
+  ArrayList<ArrayList<PVector>> allShape = new ArrayList<ArrayList<PVector>>();
+  
+  ArrayList<PVector> morph = new ArrayList<PVector>();
   ArrayList<PVector> actualShape;
+  
+  boolean shapeComplete = false;
 
   Shape() {
     InitGeometry();
   }
 
-  public void changeShape()
+  public void changeShape(int aState)
   {
-    
+    state = aState;
   }
   
   void drawGeometry()
@@ -27,34 +31,8 @@ class Shape {
     
     // Look at each vertex
     for (int i = 0; i < circle.size(); i++) {
-      PVector v1;
-      // Are we lerping to the circle or square?
-      if (state == 1) {
-        v1 = circle.get(i);
-      }
-      else if(state == 2) {
-        v1 = square.get(i);
-      }
-      else if(state == 3)
-      {
-        v1 = triangle.get(i);
-      }
-      else if(state == 4)
-      {
-        v1 = star.get(i);
-      }
-      else if(state == 5)
-      {
-        v1 = octogone.get(i);
-      }
-      else if(state == 6)
-      {
-        v1 = losange.get(i);
-      }
-      else
-      {
-        v1 = fleur.get(i);
-      }
+      
+      PVector v1 = allShape.get(state).get(i);
       
       // Get the vertex we will draw
       PVector v2 = morph.get(i);
@@ -67,10 +45,9 @@ class Shape {
      }
       
       // If all the vertices are close, switch shape
-      if (totalDistance < 0.1) {
-        state = (int)random(1,8);
-      }
-      
+
+     shapeComplete=(totalDistance < 0.1);
+     
       // Draw relative to center
       translate(width/2, height/2);
       strokeWeight(4);
@@ -78,15 +55,27 @@ class Shape {
       beginShape();
       noFill();
       stroke(random(0,256), random(0, 256), random(0, 256));
+      actualShape = morph;
       for (PVector v : morph) {
         vertex(v.x, v.y);
       }
       endShape(CLOSE);
   }
   
+  
+  public boolean isShapeComplete()
+  {
+     return shapeComplete; 
+  }
+  
+  public ArrayList<PVector> getActualShape()
+  {
+     return actualShape; 
+  }
+  
   void InitGeometry()
   {
-    // Create a circle using vectors pointing from center
+    // Circle
     for (int angle = 0; angle < 360; angle += 9) {
       // Note we are not starting from 0 in order to match the
       // path of a circle.  
@@ -97,6 +86,8 @@ class Shape {
       morph.add(new PVector());
     }
     
+    allShape.add(circle);
+    
     // Triangle 
     for(int i = 0; i < 10; i++)
     {
@@ -106,7 +97,9 @@ class Shape {
      triangle.add(new PVector(-50, -50));
     }  
     
-    // A square is a bunch of vertices along straight lines
+    allShape.add(triangle);
+    
+    // Square
     // Top of square
     for (int x = -50; x < 50; x += 10) {
       square.add(new PVector(x, -50));
@@ -124,6 +117,8 @@ class Shape {
       square.add(new PVector(-50, y));
     }
     
+    allShape.add(square);
+    
     // Losange
     for(int w = 0; w < 10; w++)
     {
@@ -132,6 +127,8 @@ class Shape {
       losange.add(new PVector(50, 0));
       losange.add(new PVector(0, -70));
     }
+    
+    allShape.add(losange);
     
     // Fleur
     for(int r = 0; r < 3; r++)
@@ -153,14 +150,16 @@ class Shape {
       fleur.add(new PVector(-40, -50));
       fleur.add(new PVector(-40, -20));
     }
-      fleur.add(new PVector(-70, 0));
-      fleur.add(new PVector(-40, 20));
-      fleur.add(new PVector(-40, 50));
-      fleur.add(new PVector(-15, 45));
-      fleur.add(new PVector(0, 70));
-      fleur.add(new PVector(15, 45));
-      fleur.add(new PVector(40, 50));
-      fleur.add(new PVector(40, 20));
+    fleur.add(new PVector(-70, 0));
+    fleur.add(new PVector(-40, 20));
+    fleur.add(new PVector(-40, 50));
+    fleur.add(new PVector(-15, 45));
+    fleur.add(new PVector(0, 70));
+    fleur.add(new PVector(15, 45));
+    fleur.add(new PVector(40, 50));
+    fleur.add(new PVector(40, 20));
+    
+    allShape.add(fleur);
     
     // Star
     for(int p = 0; p < 5; p++)
@@ -177,6 +176,8 @@ class Shape {
       star.add(new PVector(-25, 0));
     }
     
+    allShape.add(star);
+    
     // Octogone
     for(int l =0; l < 10; l++)
     {
@@ -189,5 +190,7 @@ class Shape {
       octogone.add(new PVector(0, -50));
       octogone.add(new PVector(-40, -37));
     }
+    
+    allShape.add(octogone);
   }
 }
