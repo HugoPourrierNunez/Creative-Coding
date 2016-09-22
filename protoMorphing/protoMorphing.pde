@@ -15,6 +15,7 @@ void draw() {
   shape.drawGeometry();
   if(shape.isShapeComplete())
   {
-    shape.changeShape((int)random(0,7));
+    //shape.changeShape((int)random(0,7));
+    shape.changeSize(random(1,3), .05);
   }
 }

@@ -14,6 +14,9 @@ class Shape {
   ArrayList<PVector> actualShape;
   
   boolean shapeComplete = false;
+  float size=1;
+  float actualSize=1;
+  float speedChangeSize = .05;
 
   Shape() {
     InitGeometry();
@@ -22,6 +25,13 @@ class Shape {
   public void changeShape(int aState)
   {
     state = aState;
+  }
+  
+  
+  public void changeSize(float aSize, float aSpeed)
+  {
+     size = aSize; 
+     speedChangeSize= aSpeed;
   }
   
   void drawGeometry()
@@ -45,8 +55,15 @@ class Shape {
      }
       
       // If all the vertices are close, switch shape
+      
+      
+      if(size>actualSize) actualSize+=speedChangeSize;
+      else if(size<actualSize) actualSize-=speedChangeSize;
+      
+      if(abs(actualSize-size) <.1)
+        actualSize=size;
 
-     shapeComplete=(totalDistance < 0.1);
+     shapeComplete=(totalDistance < 0.1 && actualSize==size);
      
       // Draw relative to center
       translate(width/2, height/2);
@@ -57,7 +74,7 @@ class Shape {
       stroke(random(0,256), random(0, 256), random(0, 256));
       actualShape = morph;
       for (PVector v : morph) {
-        vertex(v.x, v.y);
+        vertex(v.x*actualSize, v.y*actualSize);
       }
       endShape(CLOSE);
   }
