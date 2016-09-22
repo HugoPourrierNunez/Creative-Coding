@@ -210,4 +210,47 @@ class Shape {
     
     allShape.add(octogone);
   }
+  
+  public PVector getPointOnShape()
+  {
+      int i = (int) random(0,actualShape.size());
+      int j=i+1;
+      if(j==actualShape.size())
+        j=0;
+      while(actualShape.get(i).equals(actualShape.get(j)))
+      {
+        j++;
+      }
+      
+      PVector p1,p2;
+      if(actualShape.get(i).x>actualShape.get(j).x)
+      {
+        p1=actualShape.get(j);
+        p2=actualShape.get(i);
+      }
+      else
+      {
+         p1=actualShape.get(i);
+         p2=actualShape.get(j); 
+      }
+      
+      //Acception de la droite verticale
+      if(p1.x==p2.x)
+      {
+        if(p1.y<p2.y)
+          return new PVector(p1.x, random(p1.y, p2.y));
+        return new PVector(p1.x, random(p2.y, p1.y));
+      }
+      //Acception de la droite horizontale
+      if(p1.y==p2.y)
+      {
+        return new PVector(random(p1.x, p2.x),p1.y);
+      }
+      
+      float a=(p2.y-p1.y)/(p2.x-p1.x);
+      float b = p1.y - a*p1.x;
+      float randX = random(p1.x, p2.x);
+      
+      return new PVector(randX, a*randX+b);
+  }
 }
