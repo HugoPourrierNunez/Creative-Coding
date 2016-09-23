@@ -1,4 +1,8 @@
 import http.requests.*;
+import ddf.minim.*;
+ 
+Minim minim;
+AudioPlayer song;
 
 //Windows values
 int w=800;
@@ -35,11 +39,21 @@ boolean isPlaying = false;
 boolean isEnding = false;
 
 Analyser analyser;
+ParticleSystem ps;
+PImage sprite;  
+Shape shape ;
 
 void setup()
 {
-    size(800,800);
+    shape = new Shape();
+    frameRate(30);
+    sprite = loadImage("sprite.png");
+    ps = new ParticleSystem(10000,width/2, height/2);
+    size(800, 800, P3D);
     analyser = new Analyser();
+    
+    minim = new Minim(this);
+    
 }
 
 void draw()
@@ -50,17 +64,25 @@ void draw()
   {
      background( 255 ); 
   }
+  else
+  {
+    background( 0 ); 
+  }
   
   if(isPlaying)
   {
-    if(indexMood==0)
-      setColorFromMood(moodTab[indexMood]);
     
-    if(millis()-lastTime>durationTab[indexMood]/10 && indexMood<moodTab.length-1)
+    if(indexMood==0)
+    {
+      emotionChange();
+    }
+    
+    if(millis()-lastTime>durationTab[indexMood]/2 && indexMood<moodTab.length-1)
     {
       indexMood++;
-      setColorFromMood(moodTab[indexMood]);
+      emotionChange();
       lastTime = millis();
+      println(moodTab[indexMood]);
     }
     else if (indexMood==moodTab.length-1)
     {
@@ -68,7 +90,12 @@ void draw()
       isEnding = true;
       inStartMenu = true;
       isPlaying = false;
+      song.close();
     }
+    
+    shape.update();
+    ps.update();
+    ps.display();
     
     
   }
@@ -178,6 +205,13 @@ void draw()
   
 }
 
+void emotionChange()
+{
+  shape.changeShape((int)random(0,7));
+  ps.setColor(new PVector(random(0,255),random(0,255),random(0,255)));
+  //a faire en fonction de moodTab[indexMood]
+}
+
 void update(int x, int y) {
   if ( overRect(buttonX, buttonY, buttonWidth, buttonHeight) ) {
     buttonOver = true;
@@ -225,6 +259,10 @@ void mousePressed() {
       resultFound=false;
       isPlaying = true;      
       inStartMenu = false;
+      
+      song = minim.loadFile(myText);
+      song.rewind();
+      song.play();
     }
     else if(myText.length()>0)
     {
@@ -238,6 +276,10 @@ void mousePressed() {
       resultFound=false;
       isPlaying = true;      
       inStartMenu = false;
+      
+      song = minim.loadFile(myText);
+      song.rewind();
+      song.play();
   }
 }
 

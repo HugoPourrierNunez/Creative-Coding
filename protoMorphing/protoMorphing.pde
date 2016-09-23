@@ -1,13 +1,11 @@
 
 ParticleSystem ps;
 PImage sprite;  
-
 Shape shape ;
 
 void setup() {
   
   shape = new Shape();
-  
   frameRate(30);
   sprite = loadImage("sprite.png");
   ps = new ParticleSystem(3000,width/2, height/2);
