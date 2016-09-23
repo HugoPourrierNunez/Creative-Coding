@@ -230,8 +230,10 @@ class Shape {
   
   public PVector getPointOnShape()
   {
-      int i = (int) random(0,actualShape.size()-2);
+      int i = (int) random(0,actualShape.size());
       int j=i+1;
+      if(j==actualShape.size())
+          j=0;
       while(actualShape.get(i).x==actualShape.get(j).x && actualShape.get(i).y==actualShape.get(j).y)
       {
         delay(100);

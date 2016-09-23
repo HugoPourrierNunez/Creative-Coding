@@ -9,7 +9,7 @@ int w=800;
 int h=800;
 
 //Text field values 
-String myText="D:/PC/Téléchargements/Test3.wav";
+String myText="D:/PC/Documents/GitHub/Creative-Coding/Programme/data/Test3.wav";
 int heightTextField = 50;
 int widthTextField = 350;
 int spaceTextField = 220;
@@ -50,6 +50,7 @@ void setup()
     sprite = loadImage("sprite.png");
     ps = new ParticleSystem(10000,width/2, height/2);
     size(800, 800, P3D);
+    colorMode(RGB,256);
     analyser = new Analyser();
     
     minim = new Minim(this);
@@ -219,9 +220,162 @@ void draw()
 
 void emotionChange()
 {
-  shape.changeShape((int)random(0,7));
-  ps.setColor(new PVector(random(0,255),random(0,255),random(0,255)));
   //a faire en fonction de moodTab[indexMood]
+  String mood = moodTab[indexMood];
+  float r=0;
+  float g=0;
+  float b=0;
+  int forme=0;
+   if(mood=="UNDEFINED")
+   {
+     return;
+   }
+     
+   String[] moods = split(mood,", ");
+   
+   for(int i=0; i<1; i++)
+   {
+       println(moods[i]);
+       if(moods[i].equals("Friendly"))
+       {
+         r+=253;
+         g+=130;
+         b+=67;
+         forme=5;
+       }
+       else if(moods[i].equals("Self-Control"))
+       {
+         r+=209;
+         g+=207;
+         b+=213;
+         forme=0;
+       } 
+       else if(moods[i].equals("Criticism"))
+       {
+         r+=255;
+         forme=1;
+       } 
+       else if(moods[i].equals("Leadership"))
+       {
+         r+=0;
+         g+=124;
+         b+=219;
+         forme=2;
+       } 
+       else if(moods[i].equals("Cynicism"))
+       {
+         r+=200;
+         g+=200;
+         b+=200;
+         forme=6;
+       } 
+       else if(moods[i].equals("Supremacy"))
+       {
+         r+=128;
+         g+=128;
+         b+=255;
+         forme=6;
+       } 
+       else if(moods[i].equals("Arrogance"))
+       {
+         r+=198;
+         forme=3;
+       } 
+       else if(moods[i].equals("Love"))
+       {
+         r+=255;
+         g+=0;
+         b+=0;
+         forme=5;
+       } 
+       else if(moods[i].equals("Happiness"))
+       {
+         r+=248;
+         g+=189;
+         b+=200;
+         forme=4;
+       } 
+       else if(moods[i].equals("Defensivness"))
+       {
+         r+=72;
+         g+=72;
+         b+=255;
+         forme=6;
+       } 
+       else if(moods[i].equals("Warm"))
+       {
+         r+=255;
+         g+=0;
+         b+=0;
+         forme=0;
+       } 
+       else if(moods[i].equals("Anxiety"))
+       {
+         r+=185;
+         g+=122;
+         b+=87;
+         forme=3;
+       } 
+       else if(moods[i].equals("Practicality"))
+       {
+         r+=205;
+         g+=123;
+         b+=221;
+         forme=2;
+       } 
+       else if(moods[i].equals("Charisma"))
+       {
+         r+=251;
+         g+=129;
+         b+=69;
+         forme=5;
+       } 
+       else if(moods[i].equals("Sadness"))
+       {
+         r+=13;
+         g+=7;
+         b+=214;
+         forme=3;
+       } 
+       else if(moods[i].equals("Sorrow"))
+       {
+         r+=0;
+         g+=0;
+         b+=255;
+         forme=0;
+       } 
+       else if(moods[i].equals("Creative"))
+       {
+         r+=205;
+         g+=122;
+         b+=221;
+         forme=6;
+       } 
+       else if(moods[i].equals("Passionate"))
+       {
+         r+=240;
+         g+=0;
+         b+=48;
+         forme=5;
+       } 
+       else if(moods[i].equals("Charisma"))
+       {
+         r+=138;
+         g+=195;
+         b+=61;
+         forme=2;
+       }
+       else 
+       {
+         r=random(0,255);
+         g=random(0,255);
+         b=random(0,255);
+       }
+   }
+   
+   shape.changeShape(forme);
+   ps.setColor(new PVector(r,g,b));
+  
 }
 
 void update(int x, int y) {
@@ -309,48 +463,4 @@ void send()
     
     resultFound = true;
     
-}
-
-
-
-void setColorFromMood(String mood)
-{
-  r=0;
-  g=0;
-  b=0;
-   if(mood=="UNDEFINED")
-   {
-     r+=128;
-     b+=128;
-     g+=128;
-     background(r,g,b);
-     return;
-   }
-     
-   String[] moods = split(mood,", ");
-   
-   for(int i=0; i<1; i++)
-   {
-       println(moods[i]);
-       if(moods[i].equals("Friendly"))
-       {
-         r+=255;
-       }
-       else if(moods[i].equals("Self-Control"))
-       {
-         g+=255;
-       } 
-       else if(moods[i].equals("Leadership"))
-       {
-         b+=255;
-       }
-       else 
-         return;
-   }
-   /*r/=moods.length;
-   g/=moods.length;
-   b/=moods.length;*/
-   
-   background(r,g,b);
-   
 }

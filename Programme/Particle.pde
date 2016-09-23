@@ -89,7 +89,7 @@ class Particle {
     }
     
     lifespan-=2;
-    part.setTint(color(myColor.x ,myColor.x,myColor.z, lifespan));
+    part.setTint(color(myColor.x ,myColor.y,myColor.z, lifespan));
     // Move the particle according to its velocity
     part.translate(velocity.x, velocity.y);
     pos.x+=velocity.x;
