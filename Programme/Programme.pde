@@ -71,13 +71,24 @@ void draw()
   
   if(isPlaying)
   {
+    float max=-1;
+    for(int i = 0; i < song.bufferSize() - 1; i++)
+    {
+      if (song.left.get(i)>max)
+        max = song.left.get(i);
+      if (song.right.get(i)>max)
+        max = song.right.get(i);
+    }
+    //println("max=",max);
+    
+    shape.changeSize(2+4*max, -1);
     
     if(indexMood==0)
     {
       emotionChange();
     }
     
-    if(millis()-lastTime>durationTab[indexMood]/2 && indexMood<moodTab.length-1)
+    if(millis()-lastTime>durationTab[indexMood] && indexMood<moodTab.length-1)
     {
       indexMood++;
       emotionChange();
@@ -94,6 +105,7 @@ void draw()
     }
     
     shape.update();
+    //shape.display();
     ps.update();
     ps.display();
     

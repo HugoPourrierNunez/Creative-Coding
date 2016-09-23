@@ -52,6 +52,7 @@ class Particle {
     // A velocity with random angle and magnitude
     
     target = shape.getPointOnShape();
+    //println("target = ",target);
     target.x+=width/2;
     target.y+=height/2;
     
